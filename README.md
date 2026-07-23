@@ -59,8 +59,6 @@ Then open `http://localhost:8080`.
 
 ## Deploying to AWS
 
-## Deploying to AWS
-
 The deployment order was: VPC → ECR → ALB → ECS Fargate → Monitoring → Config → CloudTrail.
 
 Along the way I hit and resolved several real-world issues — target group type mismatches, IAM permission errors, and S3 bucket policy failures among them.
