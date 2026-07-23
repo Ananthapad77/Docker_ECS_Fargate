@@ -1,4 +1,4 @@
-# CINDER — Dockerized 3-Tier Web App on AWS ECS Fargate
+# CINDER — Dockerized Web App on AWS ECS Fargate
 
 A production-pattern, highly available deployment of a Dockerized static web application on AWS — built manually end-to-end to practice real cloud architecture, networking, container orchestration, monitoring, compliance, and audit logging.
 
