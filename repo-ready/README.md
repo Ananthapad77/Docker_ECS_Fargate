@@ -75,4 +75,4 @@ This build intentionally kept a few things simple for a learning/demo pass — n
 
 ## Author
 
-Built by [Your Name] as a hands-on AWS cloud architecture project.
+Built by Ananthapadmanabhan.G as a hands-on AWS cloud architecture project.
