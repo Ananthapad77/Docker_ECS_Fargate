@@ -9,7 +9,7 @@ A production-pattern, highly available deployment of a Dockerized static web app
 
 ## Architecture
 
-![ECS Fargate architecture diagram](docs/architecture-diagram.png)
+<img src="Architecture_Diagram.png" alt="ECS Fargate architecture diagram" width="700">
 
 Internet → **ALB** (public subnets, 2 AZs) → **ECS Fargate tasks** (private subnets, 2 AZs, never internet-exposed) — with **CloudWatch/SNS** alerting, **AWS Config** compliance rules, and **CloudTrail** audit logging wrapped around the whole thing.
 
