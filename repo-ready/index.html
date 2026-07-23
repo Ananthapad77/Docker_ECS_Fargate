@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CINDER — Live-Fire Dining</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,500&family=Work+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --char-black:#14110F;
+    --char-panel:#1E1815;
+    --ember-gold:#D4A24C;
+    --ember-red:#B33A1F;
+    --cream:#EDE7DE;
+    --cream-dim:#B8AFA2;
+    --line:#33291F;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--char-black);
+    color:var(--cream);
+    font-family:'Work Sans',sans-serif;
+    font-weight:300;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none;}
+  .display{font-family:'Fraunces',serif;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  /* focus visibility */
+  a:focus-visible, button:focus-visible{outline:2px solid var(--ember-gold); outline-offset:3px;}
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+
+  /* NAV */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:1.6rem 5%;
+    background:linear-gradient(to bottom, rgba(20,17,15,0.9), transparent);
+  }
+  nav .logo{font-family:'Fraunces',serif; font-size:1.3rem; letter-spacing:0.12em;}
+  nav ul{display:flex; gap:2.2rem; list-style:none; font-size:0.82rem; letter-spacing:0.08em; text-transform:uppercase;}
+  nav ul li a{opacity:0.8; transition:opacity .25s, color .25s;}
+  nav ul li a:hover{opacity:1; color:var(--ember-gold);}
+  .nav-toggle{display:none;}
+
+  /* HERO */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:0 5%;
+    background:
+      radial-gradient(ellipse at 50% 115%, rgba(179,58,31,0.35), transparent 60%),
+      linear-gradient(180deg, var(--char-black) 0%, #100D0B 100%);
+    overflow:hidden;
+  }
+  .embers{position:absolute; inset:0; pointer-events:none;}
+  .ember{
+    position:absolute; bottom:-10px;
+    width:4px; height:4px; border-radius:50%;
+    background:var(--ember-gold);
+    box-shadow:0 0 6px 2px rgba(212,162,76,0.7);
+    animation:rise linear infinite;
+    opacity:0;
+  }
+  @keyframes rise{
+    0%{transform:translateY(0) translateX(0); opacity:0;}
+    10%{opacity:0.9;}
+    90%{opacity:0.4;}
+    100%{transform:translateY(-100vh) translateX(20px); opacity:0;}
+  }
+  .hero-inner{position:relative; z-index:2; max-width:720px;}
+  .hero-eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.78rem; letter-spacing:0.25em; text-transform:uppercase;
+    color:var(--ember-gold); margin-bottom:1.6rem; display:block;
+  }
+  .hero h1{
+    font-size:clamp(3.2rem, 9vw, 6.5rem);
+    font-weight:600; line-height:0.95;
+    letter-spacing:-0.01em;
+  }
+  .hero h1 em{font-style:italic; font-weight:500; color:var(--ember-gold);}
+  .hero p{
+    margin-top:1.8rem; font-size:1.05rem; color:var(--cream-dim);
+    max-width:480px; margin-left:auto; margin-right:auto; line-height:1.6;
+  }
+  .hero .cta{
+    display:inline-block; margin-top:2.6rem;
+    padding:0.95rem 2.4rem;
+    border:1px solid var(--ember-gold);
+    font-family:'IBM Plex Mono',monospace; font-size:0.85rem; letter-spacing:0.1em; text-transform:uppercase;
+    transition:background .3s, color .3s;
+  }
+  .hero .cta:hover{background:var(--ember-gold); color:var(--char-black);}
+
+  /* SECTION shared */
+  section{padding:7rem 5%; position:relative;}
+  .section-inner{max-width:1080px; margin:0 auto;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:0.75rem; letter-spacing:0.22em;
+    text-transform:uppercase; color:var(--ember-gold); margin-bottom:1rem; display:block;
+  }
+  h2.display{font-size:clamp(2rem,4.5vw,3rem); font-weight:600; margin-bottom:1.4rem;}
+  .rule{height:1px; background:var(--line); width:100%; margin:0 auto;}
+
+  /* PHILOSOPHY */
+  .philosophy{display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center;}
+  .philosophy p{color:var(--cream-dim); line-height:1.85; font-size:1.02rem; max-width:480px;}
+  .flame-mark{width:100%; max-width:280px;}
+
+  /* MENU — chef's docket styling */
+  .menu-section{background:var(--char-panel);}
+  .docket{
+    border:1px solid var(--line);
+    padding:0;
+    max-width:760px;
+    margin:3rem auto 0;
+  }
+  .docket-row{
+    display:flex; justify-content:space-between; align-items:baseline;
+    padding:1.5rem 2rem;
+    border-bottom:1px solid var(--line);
+    transition:background .25s;
+  }
+  .docket-row:last-child{border-bottom:none;}
+  .docket-row:hover{background:rgba(212,162,76,0.06);}
+  .dish-name{font-family:'Fraunces',serif; font-size:1.25rem; font-weight:500;}
+  .dish-note{font-size:0.9rem; color:var(--cream-dim); margin-top:0.35rem; max-width:420px;}
+  .dish-price{font-family:'IBM Plex Mono',monospace; color:var(--ember-gold); font-size:0.95rem; white-space:nowrap; padding-left:1.5rem;}
+
+  /* RESERVE */
+  .reserve{text-align:center;}
+  .reserve h2{max-width:640px; margin-left:auto; margin-right:auto;}
+  .reserve-form{
+    display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;
+    margin-top:2.6rem;
+  }
+  .reserve-form input, .reserve-form select{
+    background:transparent; border:1px solid var(--line); color:var(--cream);
+    padding:0.9rem 1.2rem; font-family:'Work Sans',sans-serif; font-size:0.9rem;
+    min-width:160px;
+  }
+  .reserve-form button{
+    background:var(--ember-red); color:var(--cream); border:none;
+    padding:0.9rem 2rem; font-family:'IBM Plex Mono',monospace; font-size:0.85rem;
+    letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;
+    transition:background .25s;
+  }
+  .reserve-form button:hover{background:#8f2e18;}
+
+  /* FOOTER */
+  footer{
+    padding:3.5rem 5% 2.5rem;
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:2rem;
+    border-top:1px solid var(--line);
+    font-size:0.85rem; color:var(--cream-dim);
+  }
+  footer .col h3{
+    font-family:'IBM Plex Mono',monospace; font-size:0.75rem; letter-spacing:0.15em;
+    text-transform:uppercase; color:var(--cream); margin-bottom:0.8rem;
+  }
+  footer .col p, footer .col a{display:block; line-height:1.8;}
+  footer .col a:hover{color:var(--ember-gold);}
+
+  @media (max-width: 800px){
+    nav ul{display:none;}
+    .philosophy{grid-template-columns:1fr;}
+    .docket-row{flex-direction:column; gap:0.4rem;}
+    .dish-price{padding-left:0;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">CINDER</div>
+  <ul>
+    <li><a href="#philosophy">Philosophy</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#reserve">Reserve</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="embers" id="embers"></div>
+  <div class="hero-inner">
+    <span class="hero-eyebrow">Live-Fire Tasting Room</span>
+    <h1 class="display">Everything <em>touches</em><br>the flame.</h1>
+    <p>A seven-course tasting menu built entirely over open fire, smoke, and coal — no gas, no electric, no shortcuts. Seated nightly at 6 and 8:30.</p>
+    <a href="#reserve" class="cta">Reserve a seat</a>
+  </div>
+</section>
+
+<section id="philosophy">
+  <div class="section-inner philosophy">
+    <div>
+      <span class="eyebrow">Philosophy</span>
+      <h2 class="display">One heat source.<br>Total control.</h2>
+      <p>Every dish that leaves our kitchen has spent time over embers — grilled, smoked, roasted in ash, or licked by direct flame. We built the room around a single wood-fired hearth because limitation sharpens technique. Char is not a mistake here; it's a seasoning.</p>
+    </div>
+    <svg class="flame-mark" viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M100 10C70 60 40 90 40 140C40 185 66 215 100 215C134 215 160 185 160 140C160 110 145 90 130 70C130 100 118 115 105 115C92 115 90 95 95 75C80 90 70 105 70 130C70 155 85 170 100 170" stroke="#D4A24C" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M100 60C88 85 78 100 78 125C78 145 88 158 100 158" stroke="#B33A1F" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+    </svg>
+  </div>
+</section>
+
+<section id="menu" class="menu-section">
+  <div class="section-inner">
+    <span class="eyebrow">Tonight's Docket</span>
+    <h2 class="display">Tasting Menu — Seven Courses</h2>
+    <div class="docket">
+      <div class="docket-row">
+        <div><div class="dish-name">Embered Onion</div><div class="dish-note">Whole roasted in coals, cultured cream, charred chive oil</div></div>
+        <div class="dish-price">No. 01</div>
+      </div>
+      <div class="docket-row">
+        <div><div class="dish-name">Smoked Mackerel</div><div class="dish-note">Applewood smoke, pickled mustard seed, rye crumb</div></div>
+        <div class="dish-price">No. 02</div>
+      </div>
+      <div class="docket-row">
+        <div><div class="dish-name">Ash-Roasted Beet</div><div class="dish-note">Buried in embers overnight, whipped goat curd, hazelnut</div></div>
+        <div class="dish-price">No. 03</div>
+      </div>
+      <div class="docket-row">
+        <div><div class="dish-name">Fire-Licked Scallop</div><div class="dish-note">Seared over direct flame, brown butter, sea grapes</div></div>
+        <div class="dish-price">No. 04</div>
+      </div>
+      <div class="docket-row">
+        <div><div class="dish-name">Coal-Roasted Duck</div><div class="dish-note">Dry-aged, hearth-rendered fat, bitter greens, jus</div></div>
+        <div class="dish-price">No. 05</div>
+      </div>
+      <div class="docket-row">
+        <div><div class="dish-name">Charred Leek Ash</div><div class="dish-note">Burnt to black, brown butter emulsion, chive</div></div>
+        <div class="dish-price">No. 06</div>
+      </div>
+      <div class="docket-row">
+        <div><div class="dish-name">Woodsmoke Custard</div><div class="dish-note">Smoked cream, burnt honey, toasted oat</div></div>
+        <div class="dish-price">No. 07</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="reserve" class="reserve">
+  <div class="section-inner">
+    <span class="eyebrow">Reservations</span>
+    <h2 class="display">Seats are limited to eighteen covers a night.</h2>
+    <form class="reserve-form" onsubmit="event.preventDefault(); alert('Thanks — we will confirm your table by email shortly.');">
+      <input type="text" placeholder="Full name" required>
+      <input type="email" placeholder="Email" required>
+      <select required>
+        <option value="" disabled selected>Seating</option>
+        <option>6:00 PM</option>
+        <option>8:30 PM</option>
+      </select>
+      <button type="submit">Request table</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="col">
+    <h3>Cinder</h3>
+    <p>14 Furnace Lane<br>Fort Kochi, Kerala</p>
+  </div>
+  <div class="col">
+    <h3>Hours</h3>
+    <p>Tue – Sun, 6:00 PM – 11:00 PM<br>Closed Mondays</p>
+  </div>
+  <div class="col">
+    <h3>Contact</h3>
+    <a href="mailto:host@cinder-dining.com">host@cinder-dining.com</a>
+    <a href="tel:+914840000000">+91 484 000 0000</a>
+  </div>
+</footer>
+
+<script>
+  // ambient rising embers
+  const emberField = document.getElementById('embers');
+  const count = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 22;
+  for(let i=0;i<count;i++){
+    const e = document.createElement('div');
+    e.className = 'ember';
+    e.style.left = (Math.random()*100)+'%';
+    e.style.animationDuration = (6+Math.random()*6)+'s';
+    e.style.animationDelay = (Math.random()*8)+'s';
+    e.style.width = e.style.height = (2+Math.random()*3)+'px';
+    emberField.appendChild(e);
+  }
+</script>
+
+</body>
+</html>
