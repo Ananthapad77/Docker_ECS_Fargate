@@ -7,9 +7,6 @@ A production-pattern, highly available deployment of a Dockerized static web app
 ![ECS Fargate](https://img.shields.io/badge/ECS-Fargate-FF9900?style=flat&logo=amazonecs&logoColor=white)
 ![nginx](https://img.shields.io/badge/nginx-009639?style=flat&logo=nginx&logoColor=white)
 
-## Architecture
-
-<img src="Architecture_Diagram.png" alt="ECS Fargate architecture diagram" width="700">
 
 Internet → **ALB** (public subnets, 2 AZs) → **ECS Fargate tasks** (private subnets, 2 AZs, never internet-exposed) — with **CloudWatch/SNS** alerting, **AWS Config** compliance rules, and **CloudTrail** audit logging wrapped around the whole thing.
 
