@@ -46,8 +46,7 @@ Internet → **ALB** (public subnets, 2 AZs) → **ECS Fargate tasks** (private 
 ├── README.md                           # This file
 └── docs/
     ├── architecture-diagram.png        # Target architecture diagram
-    ├── CINDER_Implementation_Steps.pdf # Step 1-7 build guide
-    └── CINDER_Project_Documentation.docx  # Full documentation incl. RCA & troubleshooting log
+    
 ```
 
 ## Running Locally
@@ -60,9 +59,11 @@ Then open `http://localhost:8080`.
 
 ## Deploying to AWS
 
-Full step-by-step instructions (VPC → ECR → ALB → ECS Fargate → Monitoring → Config → CloudTrail) are in [`docs/CINDER_Implementation_Steps.pdf`](docs/CINDER_Implementation_Steps.pdf).
+## Deploying to AWS
 
-For the complete build log — including every issue hit during implementation with root cause analysis and how each was resolved (target group type mismatches, IAM permission errors, S3 bucket policy failures, and more) — see [`docs/CINDER_Project_Documentation.docx`](docs/CINDER_Project_Documentation.docx).
+The deployment order was: VPC → ECR → ALB → ECS Fargate → Monitoring → Config → CloudTrail.
+
+Along the way I hit and resolved several real-world issues — target group type mismatches, IAM permission errors, and S3 bucket policy failures among them.
 
 ## Known Simplifications
 
